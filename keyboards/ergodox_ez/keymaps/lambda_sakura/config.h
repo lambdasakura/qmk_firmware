@@ -1,13 +1,14 @@
 #ifndef CONFIG_USER_H
 #define CONFIG_USER_H
 
+// #include "quantum.h"
 #include "../../config.h"
 
 #undef RETRO_TAPPING
 #undef TAPPING_TERM
-// #undef PERMISSIVE_HOLD
-#define TAPPING_TERM 150
-#define RETRO_TAPPING
+#undef PERMISSIVE_HOLD
+#define TAPPING_TERM 250
+// #define RETRO_TAPPING
 // #define PERMISSIVE_HOLD
 
 #undef  IGNORE_MOD_TAP_INTERRUPT
