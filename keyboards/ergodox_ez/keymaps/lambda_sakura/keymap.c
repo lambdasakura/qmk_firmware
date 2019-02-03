@@ -3,9 +3,12 @@
 #include "action_layer.h"
 #include "version.h"
 
-#define BASE 0 // default layer
-#define SYMB 1 // symbols
-#define MDIA 2 // media keys
+#define BASE  0 // default layer
+#define LOWER 1 // lower  keys
+#define RISE  2 // rise  keys
+#define SYMB  3 // symbols
+#define MDIA  4 // media keys
+#define GAME  5 // game keys
 
 enum custom_keycodes {
   PLACEHOLDER = SAFE_RANGE, // can always be here
@@ -18,56 +21,141 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 0: Basic layer
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
- * | ESC    |   1  |   2  |   3  |   4  |   5  |  6   |           |  5   |   6  |   7  |   8  |   9  |   0  |   -    |
+ * | ESC    |   1  |   2  |   3  |   4  |   5  |  6   |           |  5   |   6  |   7  |   8  |   9  |   0  |  ~L1   |
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
- * | Tab    |   Q  |   W  |   E  |   R  |   T  |  [   |           |   ]  |   Y  |   U  |   I  |   O  |   P  |  Bkspc |
+ * | Tab    |   Q  |   W  |   E  |   R  |   T  |  TAB |           | DEL  |   Y  |   U  |   I  |   O  |   P  |        |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * | Ctl    |   A  |   S  |   D  |   F  |   G  |------|           |------|   H  |   J  |   K  |   L  |; / L2|  '     |
+ * | Ctl    |   A  |   S  |   D  |   F  |   G  |------|           |------|   H  |   J  |   K  |   L  |;/Ctl |        |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * | Shift  |Z/Sft |   X  |   C  |   V  |   B  |  +   |           |   \  |   N  |   M  |   ,  |   .  |  /   | Shift  |
+ * | Shift  |Z/Sft |   X  |   C  |   V  |   B  | ESC  |           | Bscp |   N  |   M  |   ,  |   .  | //Sft| Shift  |
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
- *   |Grv/L1| LGui |LAlt  |      |      |                                       | Bksp | Del  |      |      | ~L1  |
+ *   |Al+Grv| LGui |LAlt  |Bscp  | Ctrl |                                       | Ent  | Tab  |      |      |      |
  *   `----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,-------------.
  *                                        |      |      |       | Left |Right |
  *                                 ,------|------|------|       |------+--------+------.
  *                                 |      |      | Esc  |       | Up   |        |      |
- *                                 |Space |Symb  |------|       |------| Symb   |Enter |
- *                                 |/Ctrl |      | Esc  |       | Down |        |/Alt  |
+ *                                 |Spc / |Shift |------|       |------| Rise   |Enter |
+ *                                 |Ctl   |      | Esc  |       | Down |        |/Alt  |
  *                                 `--------------------'       `----------------------'
  */
 // If it accepts an argument (i.e, is a function), it doesn't need KC_.
 // Otherwise, it needs KC_*
 [BASE] = LAYOUT_ergodox(  // layer 0 : default
         // left hand
-        KC_GESC,         KC_1,     KC_2,         KC_3,        KC_4,        KC_5,   KC_6,
-        KC_TAB,          KC_Q,     KC_W,         KC_E,        KC_R,        KC_T,   KC_LBRC,
-        KC_LCTL,         KC_A,     KC_S,         KC_D,        KC_F,        KC_G,
-        KC_LSFT,         KC_Z,     KC_X,         KC_C,        KC_V,        KC_B,   KC_PLUS,
-        LALT(KC_GRV),    KC_LGUI,  KC_LALT,      KC_NO,       KC_NO,
-                                                                         KC_NO,     KC_NO,
-                                                                                    KC_ESC,
-                                                         CTL_T(KC_SPC),  KC_LSFT,   KC_ESC,
+        KC_GESC,         KC_1,            KC_2,         KC_3,        KC_4,        KC_5,   KC_6,
+        KC_TAB,          KC_Q,            KC_W,         KC_E,        KC_R,        KC_T,   KC_TAB,
+        KC_LCTL,         CTL_T(KC_A),     KC_S,         KC_D,        KC_F,        KC_G,
+        KC_LSFT,         SFT_T(KC_Z),     KC_X,         KC_C,        KC_V,        KC_B,   KC_GESC,
+        LALT(KC_GRV),    KC_LGUI,         KC_LALT,      KC_BSPC,     KC_LCTL,
+                                                                               KC_NO,     TG(GAME),
+                                                                                          KC_ESC,
+                                                              CTL_T(KC_SPC),   KC_LSFT,   KC_ESC,
         // right hand
-        KC_5,       KC_6,    KC_7,        KC_8,          KC_9,          KC_0,       KC_MINS,
-        KC_RBRC,    KC_Y,    KC_U,        KC_I,          KC_O,          KC_P,       KC_BSPC,
-                    KC_H,    KC_J,        KC_K,          KC_L,          KC_SCLN,    KC_QUOT,
-        KC_BSLS,    KC_N,    KC_M,        KC_COMM,       KC_DOT,        KC_SLSH,    KC_RSFT,
-                             KC_BSPC,     KC_DEL,        KC_NO,         KC_NO,      MO(MDIA),
+        KC_5,       KC_6,    KC_7,            KC_8,       KC_9,    KC_0,             MO(MDIA),
+        KC_DEL,    KC_Y,    KC_U,            KC_I,       KC_O,    KC_P,             KC_NO,
+                    KC_H,    KC_J,            KC_K,       KC_L,    CTL_T(KC_SCLN),   KC_NO,
+        KC_BSPC,    KC_N,    KC_M,            KC_COMM,    KC_DOT,  SFT_T(KC_SLSH),   KC_RSFT,
+                             ALT_T(KC_ENT),   KC_TAB,     KC_NO,   KC_NO,            KC_NO,
         KC_LEFT, KC_RIGHT,
         KC_UP,
-        KC_DOWN, MO(SYMB), ALT_T(KC_ENT)
+        KC_DOWN, MO(RISE), ALT_T(KC_ENT)
     ),
-/* Keymap 1: Symbol Layer
+
+/* Keymap 1: Lower Layer
+ *
+ * ,---------------------------------------------------.           ,--------------------------------------------------.
+ * |         |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |           |  F7  |  F8  |  F9  |  F10 | F11  |  F12 |        |
+ * |---------+------+------+------+------+------+------|           |------+------+------+------+------+------+--------|
+ * |         |   !  |   @  |   #  |   $  |   %  |  (   |           |  )   |  ^   |  &   |  *   |  (   |  )   |        |
+ * |---------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
+ * |         |  Tab |      |      |      |   `  |------|           |------|  |   |  +   |  -   |  [   |  ]   |        |
+ * |---------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
+ * |         |      |      |      |      |   ~  |      |           | Del  |  \   |  =   |      |  '   |  Up  |        |
+ * `---------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
+ *   |       |      |      |      |      |                                       |      |      |Left  | Down |Right |
+ *   `-----------------------------------'                                       `----------------------------------'
+ *                                        ,-------------.       ,-------------.
+ *                                        |      |      |       |      |      |
+ *                                 ,------|------|------|       |------+------+------.
+ *                                 |      |      |      |       |      |      |      |
+ *                                 |      |      |------|       |------|      |      |
+ *                                 |      |      |      |       |      |      |      |
+ *                                 `--------------------'       `--------------------'
+ */
+// LOWER
+[LOWER] = LAYOUT_ergodox(
+       // left hand
+       KC_TRNS,  KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,    KC_F6,
+       KC_TRNS,  KC_EXLM,  KC_AT,    KC_HASH,  KC_DLR,   KC_PERC,  KC_LPRN,
+       KC_TRNS,  KC_TAB,   KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_GRV,
+       KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TILD,  KC_TRNS,
+       KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,
+                                                         KC_TRNS,  KC_TRNS,
+                                                                   KC_TRNS,
+                                               KC_TRNS,  KC_TRNS,  KC_TRNS,
+       // right hand
+       KC_F7,    KC_F8,     KC_F9,    KC_F10,   KC_F11,   KC_F12,   KC_TRNS,
+       KC_RPRN,  KC_CIRC,   KC_AMPR,  KC_ASTR,  KC_LPRN,  KC_RPRN,  KC_DEL,
+                 KC_PIPE,   KC_PLUS,  KC_MINUS, KC_LBRC,  KC_RBRC,  KC_TRNS,
+       KC_DEL,    KC_BSLS,   KC_EQL,  KC_TRNS, KC_QUOT, KC_UP,    KC_TRNS,
+                            KC_TRNS,  KC_TRNS,  KC_LEFT,  KC_DOWN,  KC_RIGHT,
+       KC_TRNS, KC_TRNS,
+       KC_TRNS,
+       KC_TRNS, KC_TRNS, KC_TRNS
+),
+/* Keymap 2: Rise Layer
  *
  * ,---------------------------------------------------.           ,--------------------------------------------------.
  * |         |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |           |  F7  |  F8  |  F9  |  F10 | F11  |  F12 |   +    |
  * |---------+------+------+------+------+------+------|           |------+------+------+------+------+------+--------|
- * |         |   !  |   @  |   #  |   $  |   %  |      |           |      |  ^   |  &   |  *   |  (   |  )   |   |    |
+ * |         |   !  |   @  |   #  |   $  |   %  |  (   |           |  )   |  ^   |  &   |  *   |  (   |  )   |   |    |
  * |---------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * |         |  ESC |      |      |      |   `  |------|           |------|  +   |  =   |      |  {   |  }   |    "   |
+ * |         |  Tab |      |      |      |   `  |------|           |------|  |   |  +   |  -   |  {   |  }   |    "   |
  * |---------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * |         |      |      |      |      |   ~  |      |           |      |  \   |      |      |  [   |  ]   |        |
+ * |         |      |      |      |      |   ~  |      |           |      |  \   |  =   |      |  '   | Up   |        |
+ * `---------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
+ *   |       |      |      |      |      |                                       |      |      |Left  | Down |Right |
+ *   `-----------------------------------'                                       `----------------------------------'
+ *                                        ,-------------.       ,-------------.
+ *                                        |      |      |       |      |      |
+ *                                 ,------|------|------|       |------+------+------.
+ *                                 |      |      |      |       |      |      |      |
+ *                                 |      |      |------|       |------|      |      |
+ *                                 |      |      |      |       |      |      |      |
+ *                                 `--------------------'       `--------------------'
+ */
+// RISE
+[RISE] = LAYOUT_ergodox(
+       // left hand
+       KC_TRNS,  KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,    KC_F6,
+       KC_TRNS,  KC_EXLM,  KC_AT,    KC_HASH,  KC_DLR,   KC_PERC,  KC_LPRN,
+       KC_TRNS,  KC_TAB,   KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_GRV,
+       KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TILD,  KC_TRNS,
+       KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,
+                                                         KC_TRNS,  KC_TRNS,
+                                                                   KC_TRNS,
+                                               KC_TRNS,  KC_TRNS,  KC_TRNS,
+       // right hand
+       KC_F7,    KC_F8,     KC_F9,    KC_F10,   KC_F11,   KC_F12,   KC_PLUS,
+       KC_RPRN,  KC_CIRC,   KC_AMPR,  KC_ASTR,  KC_LPRN,  KC_RPRN,  KC_PIPE,
+                 KC_PIPE,   KC_PLUS,  KC_MINUS, KC_LBRC,  KC_RBRC,  KC_DQT,
+       KC_DEL,   KC_BSLS,   KC_EQL,   KC_TRNS,  KC_QUOT,  KC_UP,   KC_TRNS,
+                            KC_TRNS,  KC_TRNS,  KC_LEFT,  KC_DOWN,  KC_RIGHT,
+       KC_TRNS, KC_TRNS,
+       KC_TRNS,
+       KC_TRNS, KC_TRNS, KC_TRNS
+),
+/* Keymap 3: Symbol Layer
+ *
+ * ,---------------------------------------------------.           ,--------------------------------------------------.
+ * |         |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |           |  F7  |  F8  |  F9  |  F10 | F11  |  F12 |   +    |
+ * |---------+------+------+------+------+------+------|           |------+------+------+------+------+------+--------|
+ * |         |   !  |   @  |   #  |   $  |   %  |  (   |           |  )   |  ^   |  &   |  *   |  (   |  )   |   |    |
+ * |---------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
+ * |         |  ESC |      |      |      |   `  |------|           |------| Left | Down | Up   |Right |  =   |    "   |
+ * |---------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
+ * |         |      |      |      |      |   ~  |      |           |      |  \   |  =   |  [   |  ]   |      |        |
  * `---------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
  *   |       |      |      |      |      |                                       |      |      |      |      |      |
  *   `-----------------------------------'                                       `----------------------------------'
@@ -83,7 +171,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [SYMB] = LAYOUT_ergodox(
        // left hand
        KC_TRNS,  KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,    KC_F6,
-       KC_TRNS,  KC_EXLM,  KC_AT,    KC_HASH,  KC_DLR,   KC_PERC,  KC_TRNS,
+       KC_TRNS,  KC_EXLM,  KC_AT,    KC_HASH,  KC_DLR,   KC_PERC,  KC_LPRN,
        KC_TRNS,  KC_ESC,   KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_GRV,
        KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TILD,  KC_TRNS,
        KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,
@@ -91,16 +179,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                                    KC_TRNS,
                                                RGB_VAD,  RGB_VAI,  KC_TRNS,
        // right hand
-       KC_F7,  KC_F8,     KC_F9,    KC_F10,  KC_F11,   KC_F12,   KC_PLUS,
-       KC_NO,  KC_CIRC,   KC_AMPR,  KC_ASTR, KC_LPRN,  KC_RPRN,  KC_PIPE,
-               KC_PLUS,   KC_EQL,   KC_TRNS, KC_LCBR,  KC_RCBR,  KC_DQT,
-       KC_NO,  KC_BSLS,   KC_TRNS,  KC_TRNS, KC_LBRC,  KC_RBRC,  KC_TRNS,
+       KC_F7,    KC_F8,     KC_F9,    KC_F10,   KC_F11,   KC_F12,   KC_PLUS,
+       KC_RPRN,  KC_CIRC,   KC_AMPR,  KC_ASTR,  KC_LPRN,  KC_RPRN,  KC_PIPE,
+                 KC_LEFT,   KC_DOWN,  KC_UP,    KC_RIGHT, KC_EQL,   KC_DQT,
+       KC_NO,    KC_BSLS,   KC_EQL,   KC_LBRC,  KC_RBRC,  KC_TRNS,  KC_TRNS,
                           KC_LEFT,  KC_DOWN, KC_UP,    KC_RIGHT, KC_TRNS,
        RGB_TOG, RGB_SLD,
        KC_TRNS,
        KC_TRNS, KC_TRNS, RGB_HUI
 ),
-/* Keymap 2: Media and mouse keys
+/* Keymap 4: Media and mouse keys
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
  * |        |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
@@ -114,10 +202,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *   |      |      |      | Lclk | Rclk |                                       |VolUp |VolDn | Mute |      |      |
  *   `----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,-------------.
- *                                        |      |      |       |      |      |
+ *                                        | Mod  |      |       |Toggle|Solid |
  *                                 ,------|------|------|       |------+------+------.
- *                                 |      |      |      |       |      |      |Brwser|
- *                                 |      |      |------|       |------|      |Back  |
+ *                                 |      |      |      |       |      |      |      |
+ *                                 | Va-  | Va+  |------|       |------|Hue+  | Hue- |
  *                                 |      |      |      |       |      |      |      |
  *                                 `--------------------'       `--------------------'
  */
@@ -128,19 +216,63 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        KC_TRNS,  KC_TRNS,  KC_MS_L,  KC_MS_D,  KC_MS_R,  KC_TRNS,
        KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,
        EPRM,     KC_TRNS,  KC_TRNS,  KC_BTN1,  KC_BTN2,
-                                                         KC_TRNS,  KC_TRNS,
+                                                         RGB_MOD,  KC_TRNS,
                                                                    KC_TRNS,
-                                               KC_BTN1,  KC_BTN2,  KC_TRNS,
+                                               RGB_VAD,  RGB_VAI,  KC_TRNS,
     // right hand
        KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,
        KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,
                  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_MPLY,
        KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_MPRV,  KC_MNXT,  KC_TRNS,  KC_TRNS,
                            KC_VOLU,  KC_VOLD,  KC_MUTE,  KC_TRNS,  KC_TRNS,
-       KC_TRNS, KC_TRNS,
+       RGB_TOG, RGB_SLD,
        KC_TRNS,
-       KC_TRNS, KC_TRNS, KC_WBAK
+       KC_TRNS, RGB_HUD, RGB_HUI
 ),
+
+/* Keymap 5: Game layer
+ *
+ * ,--------------------------------------------------.           ,--------------------------------------------------.
+ * | ESC    |   1  |   2  |   3  |   4  |   5  |  6   |           |  5   |   6  |   7  |   8  |   9  |   0  |  ~L1   |
+ * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
+ * | Tab    |   Q  |   W  |   E  |   R  |   T  |  [   |           |   ]  |   Y  |   U  |   I  |   O  |   P  |        |
+ * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
+ * | Ctl    |   A  |   S  |   D  |   F  |   G  |------|           |------|   H  |   J  |   K  |   L  |;/Ctl |        |
+ * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
+ * | Shift  |   Z  |   X  |   C  |   V  |   B  | ESC  |           | Bscp |   N  |   M  |   ,  |   .  | //Sft| Shift  |
+ * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
+ *   |Al+Grv| LGui |LAlt  |Bscp  |Sc/Ct |                                       | Ent  | Tab  |      |      |      |
+ *   `----------------------------------'                                       `----------------------------------'
+ *                                        ,---------------.       ,-------------.
+ *                                        |      |Tg(Game)|       | Left |Right |
+ *                                 ,------|------|--------|       |------+--------+------.
+ *                                 |      |      | Esc    |       | Up   |        |      |
+ *                                 |Spc   |  M   |--------|       |------| Rise   |Enter |
+ *                                 |      |      | Esc    |       | Down |        |/Alt  |
+ *                                 `----------------------'       `----------------------'
+ */
+[GAME] = LAYOUT_ergodox(  // layer 5 : game
+        // left hand
+        KC_GESC,  KC_1,     KC_2,      KC_3,      KC_4,   KC_5,   KC_6,
+        KC_TAB,   KC_Q,     KC_W,      KC_E,      KC_R,   KC_T,   KC_LBRC,
+        KC_LCTL,  KC_A,     KC_S,      KC_D,      KC_F,   KC_G,
+        KC_LSFT,  KC_Z,     KC_X,      KC_C,      KC_V,   KC_B,   KC_GESC,
+        KC_NO,    KC_NO,    KC_LALT,   KC_BSPC,   KC_SPC,
+                                                                          KC_NO,     TG(GAME),
+                                                                                     KC_ESC,
+                                                              KC_SPC,     KC_M,      KC_ESC,
+        // right hand
+        KC_5,       KC_6,    KC_7,            KC_8,       KC_9,    KC_0,             MO(MDIA),
+        KC_RBRC,    KC_Y,    KC_U,            KC_I,       KC_O,    KC_P,             KC_NO,
+                    KC_H,    KC_J,            KC_K,       KC_L,    CTL_T(KC_SCLN),   KC_NO,
+        KC_BSPC,    KC_N,    KC_M,            KC_COMM,    KC_DOT,  SFT_T(KC_SLSH),   KC_RSFT,
+                             ALT_T(KC_ENT),   KC_TAB,     KC_NO,   KC_NO,            KC_NO,
+        KC_LEFT, KC_RIGHT,
+        KC_UP,
+        KC_DOWN, MO(RISE), KC_ENT
+    ),
+
+
 };
 
 const uint16_t PROGMEM fn_actions[] = {
